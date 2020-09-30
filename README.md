@@ -3,7 +3,7 @@
 
 A simple plugin to change tab completion of commands.
 ## Features
-- Change what commands are shown to players. (When a player types / <tab>)
+- Change what commands are shown to players. (When a player types / \<tab>)
 - Block commands from being executed that are not on the list.
 
 ### Download
