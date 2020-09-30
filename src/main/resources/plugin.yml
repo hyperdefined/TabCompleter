@@ -2,3 +2,6 @@ name: TabCompleter
 version: ${project.version}
 main: lol.hyper.tabcompleter.TabCompleter
 api-version: 1.16
+commands:
+  tcreload:
+    description: Reload config.

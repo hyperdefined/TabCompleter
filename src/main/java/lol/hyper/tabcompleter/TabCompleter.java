@@ -19,6 +19,7 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         instance = this;
         loadConfig(configFile);
         Bukkit.getServer().getPluginManager().registerEvents(new CommandEvents(), this);
+        this.getCommand("tcreload").setExecutor(new CommandReload());
     }
 
     @Override

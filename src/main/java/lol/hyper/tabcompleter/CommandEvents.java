@@ -6,6 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class CommandEvents implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
@@ -26,9 +27,13 @@ public class CommandEvents implements Listener {
         Player player = event.getPlayer();
         if (!player.isOp()) {
             if (!player.hasPermission("tabcompleter.bypass")) {
-                event.getCommands().clear();
-                event.getCommands().addAll(TabCompleter.getInstance().config.getStringList("commands"));
+                event.getCommands().retainAll(TabCompleter.getInstance().config.getStringList("commands"));
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onJoin(PlayerJoinEvent event) {
+        event.getPlayer().updateCommands();
     }
 }
