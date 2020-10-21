@@ -9,14 +9,21 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class CommandEvents implements Listener {
+
+    private final TabCompleter tabCompleter;
+
+    public CommandEvents(TabCompleter tabCompleter) {
+        this.tabCompleter = tabCompleter;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
         String[] array = event.getMessage().split(" ");
         String command = array[0].replace("/", "");
 
-        if (!TabCompleter.getInstance().config.getStringList("commands").contains(command) && TabCompleter.getInstance().config.getBoolean("block-commands-not-on-list")) {
+        if (!tabCompleter.config.getStringList("commands").contains(command) && tabCompleter.config.getBoolean("block-commands-not-on-list")) {
             if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("tabcompleter.bypass")) {
-                event.getPlayer().sendMessage(TabCompleter.getInstance().config.getString("invalid-command-message"));
+                event.getPlayer().sendMessage(tabCompleter.config.getString("invalid-command-message"));
                 event.setCancelled(true);
             }
         }
@@ -27,7 +34,7 @@ public class CommandEvents implements Listener {
         Player player = event.getPlayer();
         if (!player.isOp()) {
             if (!player.hasPermission("tabcompleter.bypass")) {
-                event.getCommands().retainAll(TabCompleter.getInstance().config.getStringList("commands"));
+                event.getCommands().retainAll(tabCompleter.config.getStringList("commands"));
             }
         }
     }
