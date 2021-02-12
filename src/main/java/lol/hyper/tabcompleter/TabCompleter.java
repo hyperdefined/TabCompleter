@@ -1,5 +1,6 @@
 package lol.hyper.tabcompleter;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,6 +19,7 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         loadConfig(configFile);
         Bukkit.getServer().getPluginManager().registerEvents(new CommandEvents(this), this);
         this.getCommand("tcreload").setExecutor(new CommandReload(this));
+        Metrics metrics = new Metrics(this, 10305);
     }
 
     public void loadConfig(File file) {
