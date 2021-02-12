@@ -20,11 +20,6 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         this.getCommand("tcreload").setExecutor(new CommandReload(this));
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
-
     public void loadConfig(File file) {
         if (!configFile.exists()) {
             this.saveResource("config.yml", true);
