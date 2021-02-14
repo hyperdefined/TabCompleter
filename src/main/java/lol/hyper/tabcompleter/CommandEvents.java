@@ -46,12 +46,18 @@ public class CommandEvents implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onCommandSuggestion(PlayerCommandSendEvent event) {
         Player player = event.getPlayer();
         if (!player.isOp()) {
             if (!player.hasPermission("tabcompleter.bypass")) {
-                event.getCommands().retainAll(tabCompleter.config.getStringList("commands"));
+
+                // Clear ALL of the commands and add ours.
+                // This is technically the wrong way to do it. The API says no to adding here but it works ¯\_(ツ)_/¯
+                event.getCommands().clear();
+                for (String command : tabCompleter.config.getStringList("commands")) {
+                    event.getCommands().add(command);
+                }
             }
         }
     }
