@@ -55,9 +55,7 @@ public class CommandEvents implements Listener {
                 // Clear ALL of the commands and add ours.
                 // This is technically the wrong way to do it. The API says no to adding here but it works ¯\_(ツ)_/¯
                 event.getCommands().clear();
-                for (String command : tabCompleter.config.getStringList("commands")) {
-                    event.getCommands().add(command);
-                }
+                event.getCommands().addAll(tabCompleter.config.getStringList("commands"));
             }
         }
     }
