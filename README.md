@@ -3,4 +3,5 @@
 
 A simple plugin to change tab completion of commands. Change what commands autofill.
 
-[Documentation and more info](https://hyper.lol/minecraft-plugins/tabcompleter/).
+- [Documentation and more info](https://hyper.lol/minecraft-plugins/tabcompleter/).
+- [SpigotMC Page](https://www.spigotmc.org/resources/tabcompleter.88952/).
