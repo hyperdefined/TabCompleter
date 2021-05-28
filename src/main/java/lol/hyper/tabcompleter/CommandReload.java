@@ -37,7 +37,7 @@ public class CommandReload implements CommandExecutor {
         if (sender.isOp() || sender.hasPermission("tabcompleter.reload")) {
             tabCompleter.loadConfig(tabCompleter.configFile);
             sender.sendMessage(ChatColor.GREEN + "Config reloaded!");
-            for (Player player: Bukkit.getOnlinePlayers()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 player.updateCommands();
             }
         } else {

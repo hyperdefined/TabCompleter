@@ -38,7 +38,8 @@ public class CommandEvents implements Listener {
         String[] array = event.getMessage().split(" ");
         String command = array[0].replace("/", "");
 
-        if (!tabCompleter.config.getStringList("commands").contains(command) && tabCompleter.config.getBoolean("block-commands-not-on-list")) {
+        if (!tabCompleter.config.getStringList("commands").contains(command)
+                && tabCompleter.config.getBoolean("block-commands-not-on-list")) {
             if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("tabcompleter.bypass")) {
                 event.getPlayer().sendMessage(tabCompleter.config.getString("invalid-command-message"));
                 event.setCancelled(true);
