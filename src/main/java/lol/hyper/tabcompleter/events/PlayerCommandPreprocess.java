@@ -15,21 +15,19 @@
  * along with TabCompleter.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package lol.hyper.tabcompleter;
+package lol.hyper.tabcompleter.events;
 
-import org.bukkit.entity.Player;
+import lol.hyper.tabcompleter.TabCompleter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 
-public class CommandEvents implements Listener {
+public class PlayerCommandPreprocess implements Listener {
 
     private final TabCompleter tabCompleter;
 
-    public CommandEvents(TabCompleter tabCompleter) {
+    public PlayerCommandPreprocess(TabCompleter tabCompleter) {
         this.tabCompleter = tabCompleter;
     }
 
@@ -45,24 +43,5 @@ public class CommandEvents implements Listener {
                 event.setCancelled(true);
             }
         }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onCommandSuggestion(PlayerCommandSendEvent event) {
-        Player player = event.getPlayer();
-        if (!player.isOp()) {
-            if (!player.hasPermission("tabcompleter.bypass")) {
-
-                // Clear ALL of the commands and add ours.
-                // This is technically the wrong way to do it. The API says no to adding here but it works ¯\_(ツ)_/¯
-                event.getCommands().clear();
-                event.getCommands().addAll(tabCompleter.config.getStringList("commands"));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onJoin(PlayerJoinEvent event) {
-        event.getPlayer().updateCommands();
     }
 }

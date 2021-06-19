@@ -17,6 +17,10 @@
 
 package lol.hyper.tabcompleter;
 
+import lol.hyper.tabcompleter.commands.CommandReload;
+import lol.hyper.tabcompleter.events.PlayerCommandPreprocess;
+import lol.hyper.tabcompleter.events.PlayerCommandSend;
+import lol.hyper.tabcompleter.events.PlayerLeave;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,11 +35,24 @@ public final class TabCompleter extends JavaPlugin implements Listener {
     public File configFile = new File(this.getDataFolder(), "config.yml");
     public FileConfiguration config;
 
+    public PlayerCommandPreprocess playerCommandPreprocess;
+    public PlayerCommandSend playerCommandSend;
+    public PlayerLeave playerLeave;
+
     @Override
     public void onEnable() {
         loadConfig(configFile);
-        Bukkit.getServer().getPluginManager().registerEvents(new CommandEvents(this), this);
+
+        playerCommandPreprocess = new PlayerCommandPreprocess(this);
+        playerCommandSend = new PlayerCommandSend(this);
+        playerLeave = new PlayerLeave();
+
+        Bukkit.getServer().getPluginManager().registerEvents(playerCommandPreprocess, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerCommandSend, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerLeave, this);
+
         this.getCommand("tcreload").setExecutor(new CommandReload(this));
+
         Metrics metrics = new Metrics(this, 10305);
     }
 
