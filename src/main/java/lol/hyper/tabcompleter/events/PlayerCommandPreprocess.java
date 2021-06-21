@@ -18,6 +18,7 @@
 package lol.hyper.tabcompleter.events;
 
 import lol.hyper.tabcompleter.TabCompleter;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,15 +32,16 @@ public class PlayerCommandPreprocess implements Listener {
         this.tabCompleter = tabCompleter;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
         String[] array = event.getMessage().split(" ");
         String command = array[0].replace("/", "");
 
         if (!tabCompleter.config.getStringList("commands").contains(command)
-                && tabCompleter.config.getBoolean("block-commands-not-on-list")) {
+                && tabCompleter.config.getBoolean("actually-block-command-execution")) {
             if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("tabcompleter.bypass")) {
-                event.getPlayer().sendMessage(tabCompleter.config.getString("invalid-command-message"));
+                String message = ChatColor.translateAlternateColorCodes('&', tabCompleter.config.getString("invalid-command-message"));
+                event.getPlayer().sendMessage(message);
                 event.setCancelled(true);
             }
         }
