@@ -33,6 +33,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class TabCompleter extends JavaPlugin implements Listener {
 
@@ -71,12 +73,22 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         config = YamlConfiguration.loadConfiguration(file);
 
         groupCommands.clear();
-        for (String group : config.getStringList("groups")) {
-            List<String> commands = config.getStringList("groups." + group);
+        for (String group : config.getConfigurationSection("groups").getKeys(false)) {
+            List<String> commands = config.getStringList("groups." + group + ".commands");
+
+            // inherit is set to false if you don't want it
+            if (!config.getString("groups." + group + ".inherit").equalsIgnoreCase("false")) {
+                String otherGroup = config.getString("groups." + group + ".inherit");
+                if (!config.getConfigurationSection("groups").getKeys(false).contains(otherGroup)) {
+                    logger.warning(otherGroup + " does NOT EXIST! Group " + group + " is trying to inherit commands from this group!");
+                } else {
+                    commands.addAll(config.getStringList("groups." + otherGroup + ".commands"));
+                }
+            }
             groupCommands.put(group, commands);
         }
 
-        if (config.getStringList("default").isEmpty()) {
+        if (!config.getConfigurationSection("groups").contains("default")) {
             logger.warning("There is no default group set! Things will break!");
         }
 

@@ -3,21 +3,19 @@
 # To assign a group these commands, you would give them tabcompleter.group.GROUPNAME (replace GROUPNAME with the name down below)
 # If a player/group does not any permissions for a certain group on the list, it will use the default commands.
 # You can add more groups, the ones that are default can be changed.
-# Simply list a command below each group. Example:
-#
-# groups:
-#  admin: (this permission would be tabcompleter.group.admin)
-#    - give
-#    - fly
+
+# Inherit let's you add commands from another group. For example: default -> vip -> admin. You would set admin to inherit vip, and vip to inherit default.
 #
 # Make sure to do /tcreload after changing this file to update in game.
 groups:
   admin:
-    - admincommands
-  vip:
-    - vipcommands
-  default: # do NOT remove this group or things will break!
-    - defaultcommands
+    inherit: default
+    commands:
+      - help
+  default:
+    inherit: false
+    commands:
+      - help
 
 # This allows you to disable command execution if they are not on the list.
 # For example, someone can type a command that is not on the list above and it will still execute.
