@@ -1,8 +1,23 @@
-# These ara the commands we want the client to see.
-# When you type / <tab> it will show these commands.
-commands:
-  - command1
-  - command2
+# Set which groups of players can see and do what commands.
+# These groups are NOT the same from your permission plugin, they are separate.
+# To assign a group these commands, you would give them tabcompleter.group.GROUPNAME (replace GROUPNAME with the name down below)
+# If a player/group does not any permissions for a certain group on the list, it will use the default commands.
+# You can add more groups, the ones that are default can be changed.
+# Simply list a command below each group. Example:
+#
+# groups:
+#  admin: (this permission would be tabcompleter.group.admin)
+#    - give
+#    - fly
+#
+# Make sure to do /tcreload after changing this file to update in game.
+groups:
+  admin:
+    - admincommands
+  vip:
+    - vipcommands
+  default: # do NOT remove this group or things will break!
+    - defaultcommands
 
 # This allows you to disable command execution if they are not on the list.
 # For example, someone can type a command that is not on the list above and it will still execute.
@@ -12,3 +27,5 @@ actually-block-command-execution: true
 # If you block commands that are not on the list, show them this message.
 # Ideally it should be "unknown command" but you can do whatever.
 invalid-command-message: "Unknown command. Type \"/help\" for help."
+
+config-version: 1
