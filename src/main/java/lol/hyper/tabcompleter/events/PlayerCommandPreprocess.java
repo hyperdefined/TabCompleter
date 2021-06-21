@@ -19,6 +19,7 @@ package lol.hyper.tabcompleter.events;
 
 import lol.hyper.tabcompleter.TabCompleter;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,16 +35,30 @@ public class PlayerCommandPreprocess implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
+
+        // convert whatever was typed into an array and only get the first element
+        // remove the slash too
         String[] array = event.getMessage().split(" ");
         String command = array[0].replace("/", "");
 
-        if (!tabCompleter.config.getStringList("commands").contains(command)
-                && tabCompleter.config.getBoolean("actually-block-command-execution")) {
-            if (!event.getPlayer().isOp() || !event.getPlayer().hasPermission("tabcompleter.bypass")) {
-                String message = ChatColor.translateAlternateColorCodes('&', tabCompleter.config.getString("invalid-command-message"));
-                event.getPlayer().sendMessage(message);
-                event.setCancelled(true);
-            }
+        Player player = event.getPlayer();
+        String group = tabCompleter.getGroup(player);
+
+        // ignore if the player can bypass
+        if (player.hasPermission("tabcompleter.bypass") || player.isOp()) {
+            return;
+        }
+
+        // if they fucked up the config, just use the default commands
+        if (group == null) {
+            group = "default";
+        }
+
+        // block the command!
+        if (!tabCompleter.groupCommands.get(group).contains(command)) {
+            String message = ChatColor.translateAlternateColorCodes('&', tabCompleter.config.getString("invalid-command-message"));
+            event.getPlayer().sendMessage(message);
+            event.setCancelled(true);
         }
     }
 }

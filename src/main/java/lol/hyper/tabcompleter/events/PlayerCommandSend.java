@@ -32,17 +32,25 @@ public class PlayerCommandSend implements Listener {
         this.tabCompleter = tabCompleter;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommandSuggestion(PlayerCommandSendEvent event) {
         Player player = event.getPlayer();
-        if (!player.isOp()) {
-            if (!player.hasPermission("tabcompleter.bypass")) {
 
-                // Clear ALL of the commands and add ours.
-                // This is technically the wrong way to do it. The API says no to adding here but it works ¯\_(ツ)_/¯
-                event.getCommands().clear();
-                event.getCommands().addAll(tabCompleter.config.getStringList("commands"));
-            }
+        if (player.hasPermission("tabcompleter.bypass") || player.isOp()) {
+            return;
         }
+
+        String group = tabCompleter.getGroup(player);
+
+        // clear the commands regardless for safety
+        event.getCommands().clear();
+
+        // if player is in no group, we outta here
+        if (group == null) {
+            return;
+        }
+
+        // The API says no to adding here but it works ¯\_(ツ)_/¯
+        event.getCommands().addAll(tabCompleter.groupCommands.get(group));
     }
 }
