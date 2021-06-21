@@ -7,11 +7,13 @@
 # Inherit let's you add commands from another group. For example: default -> vip -> admin. You would set admin to inherit vip, and vip to inherit default.
 #
 # Make sure to do /tcreload after changing this file to update in game.
+
+# See -> https://github.com/hyperdefined/TabCompleter/wiki/Configuration
 groups:
   admin:
     inherit: default
     commands:
-      - help
+      - helpbutadmin
   default:
     inherit: false
     commands:
