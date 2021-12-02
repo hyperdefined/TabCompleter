@@ -17,6 +17,8 @@
 
 package lol.hyper.tabcompleter;
 
+import lol.hyper.githubreleaseapi.GitHubRelease;
+import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.tabcompleter.commands.CommandReload;
 import lol.hyper.tabcompleter.events.PlayerCommandPreprocess;
 import lol.hyper.tabcompleter.events.PlayerCommandSend;
@@ -30,6 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -63,7 +66,9 @@ public final class TabCompleter extends JavaPlugin implements Listener {
 
         this.getCommand("tcreload").setExecutor(new CommandReload(this));
 
-        Metrics metrics = new Metrics(this, 10305);
+        new Metrics(this, 10305);
+
+        Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
     }
 
     public void loadConfig(File file) {
@@ -111,5 +116,28 @@ public final class TabCompleter extends JavaPlugin implements Listener {
             }
         }
         return group;
+    }
+
+    public void checkForUpdates() {
+        GitHubReleaseAPI api;
+        try {
+            api = new GitHubReleaseAPI("repo", "hyperdefined");
+        } catch (IOException e) {
+            logger.warning("Unable to check updates!");
+            e.printStackTrace();
+            return;
+        }
+        GitHubRelease current = api.getReleaseByTag(this.getDescription().getVersion());
+        GitHubRelease latest = api.getLatestVersion();
+        if (current == null) {
+            logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
+            return;
+        }
+        int buildsBehind = api.getBuildsBehind(current);
+        if (buildsBehind == 0) {
+            logger.info("You are running the latest version.");
+        } else {
+            logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
+        }
     }
 }
