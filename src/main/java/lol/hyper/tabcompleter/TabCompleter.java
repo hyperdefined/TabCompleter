@@ -121,7 +121,7 @@ public final class TabCompleter extends JavaPlugin implements Listener {
     public void checkForUpdates() {
         GitHubReleaseAPI api;
         try {
-            api = new GitHubReleaseAPI("repo", "hyperdefined");
+            api = new GitHubReleaseAPI("TabCompleter", "hyperdefined");
         } catch (IOException e) {
             logger.warning("Unable to check updates!");
             e.printStackTrace();
