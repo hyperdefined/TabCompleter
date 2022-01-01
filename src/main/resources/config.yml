@@ -6,13 +6,16 @@
 groups:
   admin:
     commands:
+      - somevipcommand
       - help
+      - plugins
   vip:
     commands:
-      - version
+      - somevipcommand
+      - help
   default:
     commands:
-      - pl
+      - help
 
 # This allows you to disable command execution if they are not on the list.
 # For example, someone can type a command that is not on the list above, and it will still execute.
