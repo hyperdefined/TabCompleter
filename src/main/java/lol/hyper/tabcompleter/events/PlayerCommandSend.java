@@ -45,12 +45,7 @@ public class PlayerCommandSend implements Listener {
         // clear the commands regardless for safety
         event.getCommands().clear();
 
-        // if player is in no group, use default
-        if (group == null) {
-            group = "default";
-        }
-
-        // The API says no to adding here but it works ¯\_(ツ)_/¯
+        // The API says no to adding here, but it works ¯\_(ツ)_/¯
         event.getCommands().addAll(tabCompleter.groupCommands.get(group));
     }
 }

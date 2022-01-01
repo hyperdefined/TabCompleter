@@ -1,26 +1,21 @@
 # Set which groups of players can see and do what commands.
-# These groups are NOT the same from your permission plugin, they are separate.
-# To assign a group these commands, you would give them tabcompleter.group.GROUPNAME (replace GROUPNAME with the name down below)
-# If a player/group does not any permissions for a certain group on the list, it will use the default commands.
-# You can add more groups, the ones that are default can be changed.
-
-# Inherit let's you add commands from another group. For example: default -> vip -> admin. You would set admin to inherit vip, and vip to inherit default.
-#
-# Make sure to do /tcreload after changing this file to update in game.
-
-# See -> https://github.com/hyperdefined/TabCompleter/wiki/Configuration
+# These groups will use the same name as your permission plugin! Make sure they match.
+# Put each base command on a line.
+# Default must be present.
+# See -> https://docs.hyper.lol/tabcompleter/configuration
 groups:
   admin:
-    inherit: default
-    commands:
-      - helpbutadmin
-  default:
-    inherit: false
     commands:
       - help
+  vip:
+    commands:
+      - version
+  default:
+    commands:
+      - pl
 
 # This allows you to disable command execution if they are not on the list.
-# For example, someone can type a command that is not on the list above and it will still execute.
+# For example, someone can type a command that is not on the list above, and it will still execute.
 # Set this to true so that does not happen.
 actually-block-command-execution: true
 
@@ -28,4 +23,4 @@ actually-block-command-execution: true
 # Ideally it should be "unknown command" but you can do whatever.
 invalid-command-message: "Unknown command. Type \"/help\" for help."
 
-config-version: 1
+config-version: 2

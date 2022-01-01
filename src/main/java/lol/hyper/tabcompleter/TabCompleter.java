@@ -33,20 +33,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public final class TabCompleter extends JavaPlugin implements Listener {
 
-    public File configFile = new File(this.getDataFolder(), "config.yml");
+    public final File configFile = new File(this.getDataFolder(), "config.yml");
     public FileConfiguration config;
-    public Logger logger = this.getLogger();
+    public final Logger logger = this.getLogger();
 
     // this stores which groups have which commands from the config
-    public HashMap<String, List<String>> groupCommands = new HashMap<>();
+    public final HashMap<String, List<String>> groupCommands = new HashMap<>();
 
     public PlayerCommandPreprocess playerCommandPreprocess;
     public PlayerCommandSend playerCommandSend;
@@ -78,26 +75,18 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         config = YamlConfiguration.loadConfiguration(file);
 
         groupCommands.clear();
-        for (String group : config.getConfigurationSection("groups").getKeys(false)) {
-            List<String> commands = config.getStringList("groups." + group + ".commands");
 
-            // inherit is set to false if you don't want it
-            if (!config.getString("groups." + group + ".inherit").equalsIgnoreCase("false")) {
-                String otherGroup = config.getString("groups." + group + ".inherit");
-                if (!config.getConfigurationSection("groups").getKeys(false).contains(otherGroup)) {
-                    logger.warning(otherGroup + " does NOT EXIST! Group " + group + " is trying to inherit commands from this group!");
-                } else {
-                    commands.addAll(config.getStringList("groups." + otherGroup + ".commands"));
-                }
-            }
-            groupCommands.put(group, commands);
+        // load all base commands form config
+        for (String configGroup : config.getConfigurationSection("groups").getKeys(false)) {
+            List<String> commands = config.getStringList("groups." + configGroup + ".commands");
+            groupCommands.put(configGroup, commands);
         }
 
         if (!config.getConfigurationSection("groups").contains("default")) {
             logger.warning("There is no default group set! Things will break!");
         }
 
-        if (config.getInt("config-version") != 1) {
+        if (config.getInt("config-version") != 2) {
             logger.warning("Your config file is outdated! Please regenerate the config.");
         }
     }
@@ -109,13 +98,17 @@ public final class TabCompleter extends JavaPlugin implements Listener {
      */
     public String getGroup(Player player) {
         String group = null;
-        // probably a better way of doing this
-        for (String perm : groupCommands.keySet()) {
-            if (player.hasPermission("tabcompleter.groups." + perm)) {
-                group = perm;
+        for (Map.Entry<String, List<String>> pair : groupCommands.entrySet()) {
+            String commandGroup = pair.getKey();
+            if (player.hasPermission("group." + commandGroup)) {
+                group = commandGroup;
             }
         }
-        return group;
+        if (group == null) {
+            return "default"; // return default group just to be safe
+        } else {
+            return group;
+        }
     }
 
     public void checkForUpdates() {

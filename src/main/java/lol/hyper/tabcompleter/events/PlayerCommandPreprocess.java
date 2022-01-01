@@ -49,13 +49,8 @@ public class PlayerCommandPreprocess implements Listener {
             return;
         }
 
-        // if they fucked up the config, just use the default commands
-        if (group == null) {
-            group = "default";
-        }
-
         // block the command!
-        if (!tabCompleter.groupCommands.get(group).contains(command)) {
+        if (tabCompleter.groupCommands.get(group).stream().noneMatch(command::equalsIgnoreCase)) {
             String message = ChatColor.translateAlternateColorCodes('&', tabCompleter.config.getString("invalid-command-message"));
             event.getPlayer().sendMessage(message);
             event.setCancelled(true);
