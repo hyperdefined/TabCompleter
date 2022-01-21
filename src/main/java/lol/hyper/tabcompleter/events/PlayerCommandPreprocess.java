@@ -35,6 +35,9 @@ public class PlayerCommandPreprocess implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (!tabCompleter.config.getBoolean("actually-block-command-execution")) {
+            return;
+        }
 
         // convert whatever was typed into an array and only get the first element
         // remove the slash too
