@@ -18,7 +18,7 @@ A simple plugin to change what commands get suggested to the player.
 * Block commands from being executed that are not on the list.
 
 ## Documentation
-Visit the [wiki](https://docs.hyper.lol/tabcompleter) for help.
+Visit the [wiki](https://github.com/hyperdefined/TabCompleter/wiki) for help.
 
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/TabCompleter/blob/master/LICENSE).
