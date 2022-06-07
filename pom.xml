@@ -67,6 +67,10 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>lol.hyper.tabcompleter.bstats</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>lol.hyper.githubreleaseapi</pattern>
+                            <shadedPattern>lol.hyper.tabcompleter.updater</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -98,7 +102,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.17-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -110,7 +114,14 @@
         <dependency>
             <groupId>lol.hyper</groupId>
             <artifactId>github-release-api</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
