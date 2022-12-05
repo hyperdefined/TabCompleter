@@ -2,7 +2,7 @@
 # These groups will use the same name as your permission plugin! Make sure they match.
 # Put each base command on a line.
 # Default must be present.
-# See -> https://docs.hyper.lol/tabcompleter/configuration
+# See -> https://github.com/hyperdefined/TabCompleter/wiki/Configuration
 groups:
   admin:
     commands:
