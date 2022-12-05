@@ -36,6 +36,8 @@ package lol.hyper.tabcompleter.commands;
 
 import lol.hyper.githubreleaseapi.jetbrains.annotations.NotNull;
 import lol.hyper.tabcompleter.TabCompleter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -55,12 +57,12 @@ public class CommandReload implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender.isOp() || sender.hasPermission("tabcompleter.reload")) {
             tabCompleter.loadConfig(tabCompleter.configFile);
-            sender.sendMessage(ChatColor.GREEN + "Config reloaded!");
+            tabCompleter.getAdventure().sender(sender).sendMessage(Component.text("Config reloaded!").color(NamedTextColor.GREEN));
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.updateCommands();
             }
         } else {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to reload.");
+            tabCompleter.getAdventure().sender(sender).sendMessage(Component.text("You don't have permission to reload.").color(NamedTextColor.RED));
         }
         return true;
     }

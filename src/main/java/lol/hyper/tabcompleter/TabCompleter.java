@@ -23,6 +23,10 @@ import lol.hyper.tabcompleter.commands.CommandReload;
 import lol.hyper.tabcompleter.events.PlayerCommandPreprocess;
 import lol.hyper.tabcompleter.events.PlayerCommandSend;
 import lol.hyper.tabcompleter.events.PlayerLeave;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -52,9 +56,14 @@ public final class TabCompleter extends JavaPlugin implements Listener {
 
     public Permission permission = null;
 
+    public final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private BukkitAudiences adventure;
+
     @Override
     public void onEnable() {
         loadConfig(configFile);
+
+        this.adventure = BukkitAudiences.create(this);
 
         playerCommandPreprocess = new PlayerCommandPreprocess(this);
         playerCommandSend = new PlayerCommandSend(this);
@@ -102,6 +111,21 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         }
     }
 
+    /**
+     * Gets a message from config.yml.
+     *
+     * @param path The path to the message.
+     * @return Component with formatting applied.
+     */
+    public Component getMessage(String path) {
+        String message = config.getString(path);
+        if (message == null) {
+            logger.warning(path + " is not a valid message!");
+            return Component.text("Invalid path! " + path).color(NamedTextColor.RED);
+        }
+        return miniMessage.deserialize(message);
+    }
+
     public void checkForUpdates() {
         GitHubReleaseAPI api;
         try {
@@ -123,5 +147,13 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         } else {
             logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
+    }
+
+    public BukkitAudiences getAdventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException(
+                    "Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
     }
 }

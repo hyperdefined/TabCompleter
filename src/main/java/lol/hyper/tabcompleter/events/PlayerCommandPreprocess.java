@@ -18,7 +18,7 @@
 package lol.hyper.tabcompleter.events;
 
 import lol.hyper.tabcompleter.TabCompleter;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,8 +56,8 @@ public class PlayerCommandPreprocess implements Listener {
         for (String playerGroup : playerGroups) {
             boolean matched = tabCompleter.groupCommands.get(playerGroup).stream().anyMatch(command::equalsIgnoreCase);
             if (!matched) {
-                String message = ChatColor.translateAlternateColorCodes('&', tabCompleter.config.getString("invalid-command-message"));
-                event.getPlayer().sendMessage(message);
+                Component message = tabCompleter.getMessage("invalid-command-message");
+                tabCompleter.getAdventure().player(player).sendMessage(message);
                 event.setCancelled(true);
                 return;
             }
