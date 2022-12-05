@@ -8,7 +8,7 @@
 	<a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
 </p>
 
-A simple plugin to change what commands get suggested to the player.
+A simple plugin to change what commands get suggested to the player. **Requires [Vault](https://www.spigotmc.org/resources/vault.34315/).**
 
 ## Features
 * Change what commands are suggested to players when they press tab in chat.
