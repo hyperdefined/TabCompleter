@@ -23,12 +23,13 @@ import lol.hyper.tabcompleter.commands.CommandReload;
 import lol.hyper.tabcompleter.events.PlayerCommandPreprocess;
 import lol.hyper.tabcompleter.events.PlayerCommandSend;
 import lol.hyper.tabcompleter.events.PlayerLeave;
+import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -49,6 +50,8 @@ public final class TabCompleter extends JavaPlugin implements Listener {
     public PlayerCommandSend playerCommandSend;
     public PlayerLeave playerLeave;
 
+    public Permission permission = null;
+
     @Override
     public void onEnable() {
         loadConfig(configFile);
@@ -66,6 +69,14 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         new Metrics(this, 10305);
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
+
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        if (rsp == null) {
+            logger.severe("Vault is not installed!");
+            Bukkit.getPluginManager().disablePlugin(this);
+        } else {
+            permission = rsp.getProvider();
+        }
     }
 
     public void loadConfig(File file) {
@@ -88,26 +99,6 @@ public final class TabCompleter extends JavaPlugin implements Listener {
 
         if (config.getInt("config-version") != 2) {
             logger.warning("Your config file is outdated! Please regenerate the config.");
-        }
-    }
-
-    /**
-     * Get the group for a player.
-     * @param player Player to check group for.
-     * @return Group player is in. Returns null if we can't get the group.
-     */
-    public String getGroup(Player player) {
-        String group = null;
-        for (Map.Entry<String, List<String>> pair : groupCommands.entrySet()) {
-            String commandGroup = pair.getKey();
-            if (player.hasPermission("group." + commandGroup)) {
-                group = commandGroup;
-            }
-        }
-        if (group == null) {
-            return "default"; // return default group just to be safe
-        } else {
-            return group;
         }
     }
 

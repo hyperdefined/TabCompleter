@@ -34,6 +34,7 @@
 
 package lol.hyper.tabcompleter.commands;
 
+import lol.hyper.githubreleaseapi.jetbrains.annotations.NotNull;
 import lol.hyper.tabcompleter.TabCompleter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,7 +52,7 @@ public class CommandReload implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender.isOp() || sender.hasPermission("tabcompleter.reload")) {
             tabCompleter.loadConfig(tabCompleter.configFile);
             sender.sendMessage(ChatColor.GREEN + "Config reloaded!");

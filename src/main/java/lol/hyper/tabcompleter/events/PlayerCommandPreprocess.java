@@ -45,7 +45,7 @@ public class PlayerCommandPreprocess implements Listener {
         String command = array[0].replace("/", "");
 
         Player player = event.getPlayer();
-        String group = tabCompleter.getGroup(player);
+        String[] playerGroups = tabCompleter.permission.getPlayerGroups(player);
 
         // ignore if the player can bypass
         if (player.hasPermission("tabcompleter.bypass") || player.isOp()) {
@@ -53,10 +53,14 @@ public class PlayerCommandPreprocess implements Listener {
         }
 
         // block the command!
-        if (tabCompleter.groupCommands.get(group).stream().noneMatch(command::equalsIgnoreCase)) {
-            String message = ChatColor.translateAlternateColorCodes('&', tabCompleter.config.getString("invalid-command-message"));
-            event.getPlayer().sendMessage(message);
-            event.setCancelled(true);
+        for (String playerGroup : playerGroups) {
+            boolean matched = tabCompleter.groupCommands.get(playerGroup).stream().anyMatch(command::equalsIgnoreCase);
+            if (!matched) {
+                String message = ChatColor.translateAlternateColorCodes('&', tabCompleter.config.getString("invalid-command-message"));
+                event.getPlayer().sendMessage(message);
+                event.setCancelled(true);
+                return;
+            }
         }
     }
 }
