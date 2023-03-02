@@ -71,6 +71,10 @@
                             <pattern>lol.hyper.githubreleaseapi</pattern>
                             <shadedPattern>lol.hyper.tabcompleter.updater</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>net.kyori</pattern>
+                            <shadedPattern>lol.hyper.tabcompleter.adventure</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
