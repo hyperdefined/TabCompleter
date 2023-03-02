@@ -99,13 +99,19 @@ public final class TabCompleter extends JavaPlugin implements Listener {
         groupCommands.clear();
 
         // load all base commands form config
-        for (String configGroup : config.getConfigurationSection("groups").getKeys(false)) {
+        ConfigurationSection groups = config.getConfigurationSection("groups");
+        if (groups == null) {
+            logger.severe("The groups section in the config is missing! Plugin cannot function and will be disabled.");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        for (String configGroup : groups.getKeys(false)) {
             List<String> commands = config.getStringList("groups." + configGroup + ".commands");
             groupCommands.put(configGroup, commands);
         }
 
-        if (!config.getConfigurationSection("groups").contains("default")) {
-            logger.warning("There is no default group set! Things will break!");
+        if (groupCommands.size() == 0) {
+            logger.warning("There were not groups listed in the groups section of the config. Please add the groups. The plugin will not function currently.");
         }
 
         if (config.getInt("config-version") != 2) {
