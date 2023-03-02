@@ -25,6 +25,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.List;
+
 public class PlayerCommandPreprocess implements Listener {
 
     private final TabCompleter tabCompleter;
@@ -45,22 +47,20 @@ public class PlayerCommandPreprocess implements Listener {
         String command = array[0].replace("/", "");
 
         Player player = event.getPlayer();
-        String[] playerGroups = tabCompleter.permission.getPlayerGroups(player);
 
         // ignore if the player can bypass
         if (player.hasPermission("tabcompleter.bypass") || player.isOp()) {
             return;
         }
 
-        // block the command!
-        for (String playerGroup : playerGroups) {
-            boolean matched = tabCompleter.groupCommands.get(playerGroup).stream().anyMatch(command::equalsIgnoreCase);
-            if (!matched) {
-                Component message = tabCompleter.getMessage("invalid-command-message");
-                tabCompleter.getAdventure().player(player).sendMessage(message);
-                event.setCancelled(true);
-                return;
-            }
+        List<String> allAllowCommands = tabCompleter.getCommandsForPlayer(player);
+
+        // check to see if the command is on their allowed list
+        boolean matched = allAllowCommands.stream().anyMatch(command::equalsIgnoreCase);
+        if (!matched) {
+            Component message = tabCompleter.getMessage("invalid-command-message");
+            tabCompleter.getAdventure().player(player).sendMessage(message);
+            event.setCancelled(true);
         }
     }
 }

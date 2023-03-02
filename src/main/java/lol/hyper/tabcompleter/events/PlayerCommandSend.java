@@ -24,8 +24,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class PlayerCommandSend implements Listener {
 
@@ -38,7 +37,6 @@ public class PlayerCommandSend implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommandSuggestion(PlayerCommandSendEvent event) {
         Player player = event.getPlayer();
-        String[] playerGroups = tabCompleter.permission.getPlayerGroups(player);
         if (player.hasPermission("tabcompleter.bypass") || player.isOp()) {
             return;
         }
@@ -46,9 +44,8 @@ public class PlayerCommandSend implements Listener {
         // clear the commands regardless for safety
         event.getCommands().clear();
 
+        List<String> allAllowCommands = tabCompleter.getCommandsForPlayer(player);
         // The API says no to adding here, but it works ¯\_(ツ)_/¯
-        for (String playerGroup : playerGroups) {
-            event.getCommands().addAll(tabCompleter.groupCommands.get(playerGroup));
-        }
+        event.getCommands().addAll(allAllowCommands);
     }
 }

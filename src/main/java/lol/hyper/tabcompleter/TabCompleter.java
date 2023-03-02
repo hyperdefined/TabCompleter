@@ -30,8 +30,10 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.milkbowl.vault.permission.Permission;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -155,5 +157,27 @@ public final class TabCompleter extends JavaPlugin implements Listener {
                     "Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
+    }
+
+    /**
+     * Get all commands that a player can do/see.
+     *
+     * @param player The player to check.
+     * @return List of all commands the player can do/see.
+     */
+    public List<String> getCommandsForPlayer(Player player) {
+        List<String> allAllowedCommands = new ArrayList<>();
+        String[] playerGroups = permission.getPlayerGroups(player);
+        for (String playerGroup : playerGroups) {
+            List<String> commands = groupCommands.get(playerGroup);
+            // player is not in a group we have tracked
+            // or the commands saved are empty
+            // in this case, just ignore it
+            if (commands == null || commands.isEmpty()) {
+                continue;
+            }
+            allAllowedCommands.addAll(commands);
+        }
+        return allAllowedCommands;
     }
 }
